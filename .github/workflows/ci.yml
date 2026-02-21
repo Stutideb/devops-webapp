@@ -22,3 +22,9 @@ jobs:
 
     - name: Deploy to S3
       run: aws s3 sync . s3://devops-webapp-stuti --delete
+          - name: Notify Slack
+      if: always()
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{"text":"🚀 DevOps Pipeline Completed Successfully for devops-webapp"}' \
+        ${{ secrets.SLACK_WEBHOOK }}
