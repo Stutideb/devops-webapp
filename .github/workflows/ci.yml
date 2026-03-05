@@ -9,11 +9,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check HTML File
+      - name: Run Basic HTML Check
         run: |
           echo "CI Started"
-          test -f index.html && echo "index.html found" || exit 1
+          if [ -f index.html ]; then
+            echo "index.html found"
+          else
+            echo "index.html missing"
+            exit 1
+          fi
           echo "CI Completed Successfully"
+
+      - name: Send Slack Notification
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"GitHub CI Pipeline Completed Successfully"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
